@@ -1,16 +1,41 @@
+from multiprocessing import Process
 
 
-def element(index, A, B):
-    i, j = index
-    res = 0
-    # get a middle dimension
-    N = len(A[0]) or len(B)
-    for k in range(N):
-        res += A[i][k] * B[k][j]
-    return res
+def elemresult(indexes,A,B):
+	global matrixresult
+	res = 0
+	i,k = indexes
+	try:
+		for stage in range(len(A)):
+			res+=A[i][stage]*B[stage][k]
+	except:
+		for stage in range(len(B)):
+			res+=A[i][stage]*B[stage][k]
+	matrixresult[i][k] = res
+	
+#start data point
 
+matrix1 = [[1,2,3],[1,2,3],[1,2,3]]
+matrix2 = [[3,3],[3,3],[3,3]]
+matrixresult = []
+	
+#convert result matrix with correct length
+	
+for smth in range(len(matrix1)):
+		matrixresult.append([])
+		
+for line in range(len(matrixresult)):
+	for smth in range(len(matrix2[0])):
+		matrixresult[line].append(0)
+		
+#call function
 
-matrix1 = [[1, 2], [3, 4]]
-matrix2 = [[2, 0], [1, 2]]
+if len(matrix1) == len(matrix2[0]) or len(matrix1[0]) == len(matrix2):
+	for line in range(len(matrix1)):
+				for elem in range(len(matrix1[0])):
+					elemresult((line,elem),matrix1,matrix2)
 
-print(element((1, 0), matrix1, matrix2))
+	#print result
+	print(matrixresult)
+else:
+	print('invalid input data')
