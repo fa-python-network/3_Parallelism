@@ -35,7 +35,7 @@ class Matrix(object):
         """
 
         self.__C = [[0 for _ in range(len(self.A))] for _ in range(len(self.A))]
-        with Pool(processes=cpu_count() if max_processes is None else max_processes) as pool:
+        with Pool(processes=max_processes) as pool:
             self.__C = [pool.starmap(self._element, [(i, j) for j in range(len(self.A))]) for i in range(len(self.A))]
         return self.matrix_save("C.txt" if file_name is None else file_name, self.__C)
 
