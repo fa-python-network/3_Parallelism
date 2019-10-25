@@ -25,7 +25,7 @@ class Matrix(object):
             self.B = self.matrix_open(file_name=B_file_name)
         self.__C = list()
 
-    def matrix_multiply(self, max_processes: int = None, file_name: str = None):
+    def matrix_multiply(self, max_processes: int = None, file_name: str = None) -> list:
         """
         Перемножает элементы матрицы используя пул процессов
 
@@ -51,7 +51,7 @@ class Matrix(object):
         return sum(self.A[i][k] * self.B[k][j] for k in range(len(self.A[0]) or len(self.B)))
 
     @staticmethod
-    def matrix_open(file_name: str):
+    def matrix_open(file_name: str) -> list:
         """
         Открывает файл
 
@@ -63,7 +63,7 @@ class Matrix(object):
             return [[int(i) for i in line.rstrip().split(" ")] for line in file_m]
 
     @staticmethod
-    def matrix_save(file_name: str, matrix: list):
+    def matrix_save(file_name: str, matrix: list) -> list:
         """
         Сохраняет матрицу в файл
 
