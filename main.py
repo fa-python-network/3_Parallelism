@@ -1,17 +1,15 @@
 from multiprocessing import Process
 
 
-def elemresult(indexes,A,B):
-	global matrixresult
-	res = 0
-	i,k = indexes
-	try:
-		for stage in range(len(A)):
-			res+=A[i][stage]*B[stage][k]
-	except:
-		for stage in range(len(B)):
-			res+=A[i][stage]*B[stage][k]
-	matrixresult[i][k] = res
+def elemresult(index, A, B, res):
+    glodal res
+    i, j = index
+    res = 0
+    # get a middle dimension
+    N = len(A[0]) or len(B)
+    for k in range(N):
+        res += A[i][k] * B[k][j]
+    return res
 	
 #start data point
 
