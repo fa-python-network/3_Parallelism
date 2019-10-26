@@ -13,16 +13,8 @@ class Matrix(object):
         :param B_file_name: название файла второй матрицы
         """
 
-        if A is None:
-            A = list()
-        if B is None:
-            B = list()
-        self.A = A
-        self.B = B
-        if A_file_name is not None:
-            self.A = self.matrix_open(file_name=A_file_name)
-        if B_file_name is not None:
-            self.B = self.matrix_open(file_name=B_file_name)
+        self.A = list() if A_file_name is None else self.matrix_open(file_name=A_file_name) if A is None else A
+        self.B = list() if B_file_name is None else self.matrix_open(file_name=B_file_name) if B is None else B
         self.__C = list()
 
     def matrix_multiply(self, max_processes: int = None, file_name: str = None) -> list:
