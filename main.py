@@ -1,4 +1,4 @@
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool
 
 
 class Matrix(object):
@@ -13,8 +13,8 @@ class Matrix(object):
         :param B_file_name: название файла второй матрицы
         """
 
-        self.A = list() if A_file_name is None else self.matrix_open(file_name=A_file_name) if A is None else A
-        self.B = list() if B_file_name is None else self.matrix_open(file_name=B_file_name) if B is None else B
+        self.A = (list() if A_file_name is None else self.matrix_open(file_name=A_file_name)) if A is None else A
+        self.B = (list() if B_file_name is None else self.matrix_open(file_name=B_file_name)) if B is None else B
         self.__C = list()
 
     def matrix_multiply(self, max_processes: int = None, file_name: str = None) -> list:
