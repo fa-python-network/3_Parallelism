@@ -11,7 +11,7 @@ def element(index, m1, m2,q = 0):
         return res
     return q.put(res) #реализация очереди
     
-def mp_multiply(m1,m2):
+def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",output = True):
     """Параллельное умножение матриц """
     q = Queue()
     m3 = []
@@ -20,9 +20,13 @@ def mp_multiply(m1,m2):
         for j in range(len(m1[0])):
             p = Process(target = element,args = ((i,j),m1,m2,q,))
             p.start()
-            m3.append(q.get())
+            res=q.get()
+            if mp_write:
+                element_write_matrix(res,(i,j),(len(m1),len(m2[0])),file,sep,output)
+            m3.append(res)
             p.join()
     return m3
+
     
 def read_matrix(f,sep = ";"):
     """Читает матрицу из файла с заданным разделителем """
@@ -41,7 +45,7 @@ def read_matrix(f,sep = ";"):
             matrix[i][j] = int(matrix[i][j])
     return matrix
 
-def write_matrix(matrix,f = "m.txt",sep = ";",mp = False,output = True):
+def write_matrix(matrix,f = "m.txt",sep = ";", output = True):
     """Записывает матрицу в файл с заданным разделителем"""
     strm = str(matrix)
     mod = str()
@@ -64,8 +68,7 @@ def element_write_matrix(num,index,size,f = "m.txt",sep = ";",output = True):
     mod = str()
     i, j = index
     n, m = size
-    exists= True if index != (0,0) else False 
-    print(exists)
+    exists= True if index != (0,0) else False #проверка на то, существуют ли элементы до этого
     try:
         file = open(f)
         file.close()
@@ -101,11 +104,6 @@ if __name__ == "__main__":
     m2=read_matrix("m2.txt") #j*m 
     # результирующая матрица i*m
     print("Матрица 1:{} Матрица 2:{}".format(m1,m2))
-    print(reshape(mp_multiply(m1,m2),(len(m1),len(m2[0]))))
-    #m3=reshape(mp_multiply(m1,m2),(len(m1),len(m2[0])))
-    m3=reshape(mp_multiply(m1,m2),(len(m1),len(m2[0])))
-    element_write_matrix(m3[0][0],(0,0),(2,2),"m3.txt")
-    element_write_matrix(m3[0][1],(0,1),(2,2),"m3.txt")
-    element_write_matrix(m3[1][0],(1,0),(2,2),"m3.txt")
-    element_write_matrix(m3[1][1],(1,1),(2,2),"m3.txt")
+    m3=reshape(mp_multiply(m1,m2,mp_write=True,file="m3.txt",output=False),(len(m1),len(m2[0])))
+    print(m3)
             
