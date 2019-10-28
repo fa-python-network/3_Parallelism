@@ -23,8 +23,14 @@ def multiply_matrix(m1,m2,linenum,glb):
 					sum+=m1[line1][col1]*m2[col1][col2]
 				temp.append(sum)
 				sum = 0
-			for elem in range(0,len(temp)):
+			strresult = '['
+			for elem in range(0,len(temp)-1):
 				matrix_result[linenum*len(temp)+elem] = temp[elem]
+				strresult+=f'{temp[elem]},'
+			matrix_result[linenum*len(temp)+(len(temp)-1)] = temp[len(temp)-1]
+			strresult+=f'{temp[len(temp)-1]}]'
+			with open('matrix-result.txt','a') as f:
+				f.write(strresult + '\n')
 			temp = []
 			
 		glb.matrix_result = matrix_result
@@ -33,8 +39,10 @@ def multiply_matrix(m1,m2,linenum,glb):
 
 m1file = 'matrix1.txt'
 m2file = 'matrix2.txt'
-mrfile = 'matrix-result.txt'
-strresult = ''
+with open('matrix-result.txt','w') as f:
+	f.write('')
+#mrfile = 'matrix-result.txt'
+#strresult = ''
 
 matrix1 = []
 matrix2 = []
@@ -89,16 +97,16 @@ if __name__ == '__main__':
 	now = 0
 	for line in range(0,len(validmatrix)):
 		print('[',end='')
-		strresult+='['
+		#strresult+='['
 		for elem in range(0,len(validmatrix[line])-1):
-			strresult+=f'{matrix_result[now]},'
+			#strresult+=f'{matrix_result[now]},'
 			print(f'{matrix_result[now]},',end='')
 			now+=1
 		print(f'{matrix_result[now]}',end='')
-		strresult+=f'{matrix_result[now]}'
+		#strresult+=f'{matrix_result[now]}'
 		now+=1
 		print(']\n',end='')
-		strresult+=']\n'
+		#strresult+=']\n'
 		
-	with open(mrfile,'w') as f:
-		f.write(strresult)
+	#with open(mrfile,'w') as f:
+		#f.write(strresult)
