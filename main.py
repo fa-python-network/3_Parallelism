@@ -1,8 +1,10 @@
-from multiprocessing import Process, Pool, Array
+from multiprocessing import Process, Pool, Manager
 
 
-def multiply_matrix(m1,m2,linenum,matrix_result):
-
+def multiply_matrix(m1,m2,linenum,glb):
+	
+	matrix_result = glb.matrix_result
+	
 	temp = []
 	sum = 0
 	
@@ -24,6 +26,8 @@ def multiply_matrix(m1,m2,linenum,matrix_result):
 			for elem in range(0,len(temp)):
 				matrix_result[linenum*len(temp)+elem] = temp[elem]
 			temp = []
+			
+		glb.matrix_result = matrix_result
 	
 #start data point
 
@@ -63,18 +67,23 @@ with open(m2file,'r') as f:
 	
 
 validmatrix = matrix2
-if len(matrix1) < len(matrix2):
+if len(matrix1) > len(matrix2):
 	validmatrix = matrix1
-
-matrix_result = Array('i',[0 for i in range(0,len(validmatrix)*len(validmatrix[0]))])
 
 
 if __name__ == '__main__':
-	for line in range(0,len(matrix1)):
-		p1 = Process(target=multiply_matrix,args=(matrix1,matrix2,line,matrix_result))
-		p1.start()
-		p1.join()
 
+	manager = Manager()
+
+	Global = manager.Namespace()
+	Global.matrix_result = [0 for i in range(0,len(validmatrix)*len(validmatrix[0]))]
+	
+	
+	pool = Pool(len(matrix1))
+	
+	pool.starmap(multiply_matrix,[(matrix1,matrix2,linehere,Global) for linehere in range(0,len(matrix1))])
+
+	matrix_result = Global.matrix_result
 
 	#print result
 	now = 0
