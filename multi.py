@@ -25,13 +25,17 @@ print(n)
 print(mat1)
 print(mat2)
 
+open('promez.txt','w').close()
+
 def q(k):
-	l=0
-	for i in range(len(mat1[0])):
-		l+=mat1[k//n1][i]*mat2[i][k%n1]
-	print(l, os.getpid())
-	return(l)
-	
+	with open('promez.txt', 'a') as file:
+		l=0
+		for i in range(len(mat1[0])):
+			l+=mat1[k//n1][i]*mat2[i][k%n1]
+		print(l, os.getpid())
+		file.write(str(l)+' ')
+		return(l)
+		
     
     
 for i in range(n):
@@ -39,17 +43,14 @@ for i in range(n):
 print(c)
 pool = Pool(processes=5)
 h=(pool.map(q,c))
-o=[]
-print(n1)
-print(h)
-for i in range(n1):
-	o.append([])
-	for j in range(n1):
-		o[i].append(h[j+i*n1])
 
-print(o)
-
+with open('promez.txt', 'r') as file2:
+	for line in file2:
+		o = line.split(' ')
+		rez=''
+		for i in range(n1):
+			for j in range(n1):
+				rez= rez + o[j+i*n1] + ' '
+			rez+='\n'
 with open ('matrix3.txt', 'w') as matrix3:
-	for i in o:
-		matrix3.write(' '.join(str(ch) for ch in i))
-		matrix3.write('\n')
+		matrix3.write(rez)
