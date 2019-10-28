@@ -1,0 +1,27 @@
+import numpy as np
+from multiprocessing import Process, Pool
+
+
+matrix1 = [[1, 2, 3], 
+           [-11, 5, 7]]
+
+matrix2 = [[-14, 10, 1], 
+           [2, 0, 8]]
+k=0
+c=[]
+mt2trans = np.array(matrix2)
+mt2trans = mt2trans.transpose()
+
+def proizvedenie(matrix1,matrix2):
+    k=0
+    for s1 in matrix1:
+        for s2 in matrix2:
+            for i in range(len(matrix1)+1): 
+                k=k+(s1[i]*s2[i])
+            c.append(k)
+            k=0
+    return(c) 
+a = proizvedenie(matrix1,matrix2)
+
+print(a)
+    
