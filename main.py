@@ -27,8 +27,41 @@ def multiply_matrix(m1,m2,linenum,matrix_result):
 	
 #start data point
 
-matrix1 = [[4,4,4],[5,5,5]]
-matrix2 = [[4,4,4],[5,5,5],[6,6,6]]
+m1file = 'matrix1.txt'
+m2file = 'matrix2.txt'
+mrfile = 'matrix-result.txt'
+strresult = ''
+
+matrix1 = []
+matrix2 = []
+
+#read data from files
+
+with open(m1file,'r') as f:
+	str = f.read()
+	str = str.replace('[[','')
+	str = str.replace(']]','')
+	str = str.split('],[')
+	for line in range(0,len(str)):
+		matrix1.append([])
+		linenow = str[line].split(',')
+		for elem in range(0,len(linenow)):
+			matrix1[line].append(int(linenow[elem]))
+			
+			
+with open(m2file,'r') as f:
+	str = f.read()
+	str = str.replace('[[','')
+	str = str.replace(']]','')
+	str = str.split('],[')
+	for line in range(0,len(str)):
+		matrix2.append([])
+		linenow = str[line].split(',')
+		for elem in range(0,len(linenow)):
+			matrix2[line].append(int(linenow[elem]))
+	
+	
+
 validmatrix = matrix2
 if len(matrix1) < len(matrix2):
 	validmatrix = matrix1
@@ -47,9 +80,16 @@ if __name__ == '__main__':
 	now = 0
 	for line in range(0,len(validmatrix)):
 		print('[',end='')
+		strresult+='['
 		for elem in range(0,len(validmatrix[line])-1):
+			strresult+=f'{matrix_result[now]},'
 			print(f'{matrix_result[now]},',end='')
 			now+=1
 		print(f'{matrix_result[now]}',end='')
+		strresult+=f'{matrix_result[now]}'
 		now+=1
 		print(']\n',end='')
+		strresult+=']\n'
+		
+	with open(mrfile,'w') as f:
+		f.write(strresult)
