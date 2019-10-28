@@ -3,8 +3,19 @@ from random import randint
 
 def matrixmult(a, b):
     res_mul = sum(i*j for i, j in zip(a,b))
+    write_to_file(res_mul)
     return res_mul  
 
+def write_to_file(a):
+    global matrix2, count
+    with open('matrixmult.txt','a') as file:
+        if count % (len(matrix2[0])) == 0:
+            file.write(f'{a}\n')
+        else:
+            file.write(f'{a} ')
+    count+=1
+
+count=1
 if __name__ =='__main__':
     matrix1 = [[randint(-10,10) for i in range(2)] for i in range(3)]
     matrix2 = [[randint(-10, 10) for i in range(3)] for i in range(2)]
