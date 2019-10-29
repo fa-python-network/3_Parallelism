@@ -13,7 +13,7 @@ def creatematrix(l,r):
     m=[]
     for i in range(0,l):
         for j in range(0,r):
-            t.append(random.randint(1,10))
+            t.append(random.randint(-100, 100))
         m.append(t)
         t=[]
     return m
