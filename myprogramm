@@ -21,9 +21,7 @@ def proizvedenie(index,matrix1,matrix2):
             c.append(k)
             k=0
     return(c) 
-a = proizvedenie(matrix1,matrix2)
 
-print(a)
     
 res = 0
 
