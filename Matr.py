@@ -1,4 +1,4 @@
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 
 def elem(m):
@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     ls = []
 
-    for i in range(len(res_matr)):
+    for i in range(cpu_count()):
         for j in range(len(B[1])):
             ls.append(([int(o) for o in A[i]], [int(k[j]) for k in B]))
 
