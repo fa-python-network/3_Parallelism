@@ -4,8 +4,21 @@ from random import randint
 def matrix_mult(x, y):
 
 	s = sum(i*j for i, j in zip(x,y))
-     
+    
+	zapis(s)
+
 	return s
+
+def zapis(a):
+    global matrix2, count
+    with open('matrmulti.txt', 'a') as file:
+        if count % (len(matrix2[0])) == 0:
+            file.write(f'{a}\n')
+        else:
+            file.write(f'{a} ')
+    count += 1
+
+count = 1
 
 
 if __name__ =='__main__':
