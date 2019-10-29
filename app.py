@@ -1,33 +1,30 @@
-from multiprocessing import Process, Pool, cpu_count, Queue
+import json
+from multiprocessing import Pool, cpu_count
 
 
-def multiplier(q: Queue, res_q: Queue):
-    while q.qsize():
-        row, line, place = q.get()
-        if len(row) - len(line):
-            raise ValueError
-        res_q.put((place, sum([row[i] * line[i] for i in range(len(row))])))
+def multiplier(params):
+    row, line, place = params
+    if len(row) - len(line):
+        raise ValueError
+    return place, sum([row[i] * line[i] for i in range(len(row))])
 
 
 if __name__ == '__main__':
-    matrix = ((1, 2, 3),
-              (4, 5, 6))
-    another_matrix = ((1, 3),
-                      (4, 6),
-                      (7, 9))
+    with open('matrix.json') as j_file:
+        both_matrix = json.load(j_file)
+    matrix, another_matrix = both_matrix['one'], both_matrix['two']
 
-    q = Queue()
-    res_q = Queue()
+    q = []
     for i in range(len(matrix)):
         for j in range(len(another_matrix[0])):
-            q.put((matrix[i], [another_matrix[x][j] for x in range(len(another_matrix))], (i, j)))
+            q.append((matrix[i], [another_matrix[x][j] for x in range(len(another_matrix))], (i, j)))
 
     res = [[[] for _ in range(len(matrix))] for __ in range(len(matrix))]
-    processes = [Process(target=multiplier, args=(q, res_q)) for _ in range(2)]
-    [i.start() for i in processes]
-    [i.join() for i in processes]
-    for i in range(res_q.qsize()):
-        place, res_c = res_q.get()
+
+    processes_pool = Pool(cpu_count())
+    results = processes_pool.map(multiplier, q)
+    for i in results:
+        place, res_c = i
         res[place[0]][place[1]] = res_c
 
     print(res)
