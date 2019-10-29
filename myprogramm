@@ -12,7 +12,7 @@ c=[]
 mt2trans = np.array(matrix2)
 mt2trans = mt2trans.transpose()
 
-def proizvedenie(matrix1,matrix2):
+def proizvedenie(index,matrix1,matrix2):
     k=0
     for s1 in matrix1:
         for s2 in matrix2:
@@ -25,3 +25,10 @@ a = proizvedenie(matrix1,matrix2)
 
 print(a)
     
+res = 0
+
+p1 = Process(target=proizvedenie, args=[(0, 0), matrix1, matrix2, res])
+p1.start()
+p1.join()
+
+print(res)
