@@ -1,4 +1,5 @@
-from multiprocessing import Pool,Process,Queue
+from multiprocessing import Pool, Process, Queue
+import random
 
 def element(index, m1, m2,q = 0):
     """Поэлементное умножение матриц """
@@ -26,7 +27,6 @@ def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",output = True):
             m3.append(res)
             p.join()
     return m3
-
     
 def read_matrix(f,sep = ";"):
     """Читает матрицу из файла с заданным разделителем """
@@ -44,6 +44,29 @@ def read_matrix(f,sep = ";"):
         for j in range(len(matrix[i])):
             matrix[i][j] = int(matrix[i][j])
     return matrix
+
+def generate_empty_square(size):
+    """Генерирует пустую квадратную матрицу """
+    return [[0 for i in range(size)] for j in range(size)]
+
+def randomize_row(m,row,lower_bound=-10,upper_bound=10):
+    """ Рандомизирует row строку матрицы"""
+    #print(m)
+    t=list()
+    for n in range(len(m[0])): # так как матрица квадратная, можно генерировать строки и столбцы в одном цикле 
+        t.append(random.randint(lower_bound,upper_bound))
+    m[row]=t
+    print(m)
+
+def randomize_column(m,column,lower_bound=-10,upper_bound=10):
+    """ Рандомизирует column столбец матрицы"""
+    t=list()
+    for n in range(len(m)):
+        t.append(random.randint(lower_bound,upper_bound))
+        m[n][column]=random.randint(lower_bound,upper_bound)
+    print(m)
+       
+        
 
 def write_matrix(matrix,f = "m.txt",sep = ";", output = True):
     """Записывает матрицу в файл с заданным разделителем"""
@@ -106,4 +129,13 @@ if __name__ == "__main__":
     print("Матрица 1:{} Матрица 2:{}".format(m1,m2))
     m3=reshape(mp_multiply(m1,m2,mp_write=True,file="m3.txt",output=False),(len(m1),len(m2[0])))
     print(m3)
-            
+
+    m4=m5=generate_empty_square(4)
+    print(m4,m5,sep="\n")
+    #for j in range(len(m5)):
+      #  randomize_column(m5,j)
+    for i in range(len(m4[0])):
+        randomize_row(m4,i)
+        
+    
+        
