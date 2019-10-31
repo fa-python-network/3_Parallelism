@@ -16,8 +16,8 @@ def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",generate = False):
     """Параллельное умножение матриц c возможностью записи в файл и ГСЧ"""
     q = Queue()
     m3 = []
+    #p2=0
     randomized=[False for i in range(len(m1[0])) ] #список булевых значений, отражающий, был ли сгенерирован данный столбец случайных чисел
-    
     for i in range(len(m1)):
         if generate: #если генерируем случайную матрицу           
                 randomize_row(m1,i) 
@@ -30,21 +30,21 @@ def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",generate = False):
             p.start()
             res = q.get()
             if mp_write: #если запись в файл
-                element_write(res,(i,j),(len(m1),len(m2[0])),file,sep)
+                p2=Process(target=element_write,args=(res,(i,j),(len(m1),len(m2[0])),file,sep,))
+                p2.start()
+                p2.join()
             m3.append(res)
-            p.join()
+            p.join()   
     return m3
-    
     
 def read(f,sep = ";"):
     """Читает матрицу из файла с заданным разделителем """
     str_m = [] #матрица в строковом представлении
-    m = [] #матрица в целых числах
-    
+    m = [] #матрица в целых числах 
     with open(f) as file_handler:
         for line in file_handler:#читаем строки из файла и добавляем в список
             str_m.append(line)
-            
+
     for i in range(len(str_m)):#добавляем в список спличенные по разделителю строки
         m.append(str_m[i].split(sep))
         
@@ -88,7 +88,7 @@ def element_write(num,index,size,f = "m.txt",sep = ";"):
     mod = str() #режим работы с файлом
     i, j = index #текущие индексы
     n, m = size #размер матрицы
-    exists= True if index != (0,0) else False #проверка на то, существуют ли элементы до этого
+    exists = True if index != (0,0) else False #проверка на то, существуют ли элементы до этого
     try:
         file = open(f)
         file.close()
