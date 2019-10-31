@@ -2,14 +2,14 @@ from multiprocessing import Process, Pool, Manager
 from random import randint
 
 
-def forpotok(matrix1, matrix2, ind, All):
+def forpotok(matrix1, matrix2, ind, All):  # Основная функция потока-вычислителя строки на стобец. Возвращает результат в глобальную переменную
     res = All.an
     for k in range(0, len(matrix2[0])):
         res[ind].append(element((ind, k), matrix1, matrix2))
     All.an = res
 
 
-def check_matr(All):
+def check_matr(All): #Функция проверки списка матриц. Создает необходимое кол-во потоков для решения матриц.
     while All.lst_mat:
         procs = []
         lst = All.lst_mat
@@ -27,7 +27,7 @@ def check_matr(All):
             break
 
 
-def matrix_gen(All):
+def matrix_gen(All): # Генерация матриц заданной размерности.  С рандомными значениями и занесением их в список. При вводе exit. Останавливает работу.
     while True:
         if All.com == "exit":
             break
@@ -65,5 +65,3 @@ if __name__ == '__main__':
     while All.com != "exit":
         All.com = input()
     matproc.join()
-
-    
