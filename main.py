@@ -1,4 +1,4 @@
-from multiprocessing import Pool, Process, Queue
+from multiprocessing import Process, Queue
 import random
 
 def element(index, m1, m2,q = 0):
@@ -13,7 +13,7 @@ def element(index, m1, m2,q = 0):
     return q.put(res) #реализация очереди 
     
 def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",generate = False):
-    """Параллельное умножение матриц """
+    """Параллельное умножение матриц c возможностью записи в файл и ГСЧ"""
     q = Queue()
     m3 = []
     randomized=[False for i in range(len(m1[0])) ] #список булевых значений, отражающий, был ли сгенерирован данный столбец случайных чисел
@@ -30,47 +30,47 @@ def mp_multiply(m1,m2,mp_write = False,file = "",sep=";",generate = False):
             p.start()
             res = q.get()
             if mp_write: #если запись в файл
-                element_write_matrix(res,(i,j),(len(m1),len(m2[0])),file,sep)
+                element_write(res,(i,j),(len(m1),len(m2[0])),file,sep)
             m3.append(res)
             p.join()
     return m3
     
     
-def read_matrix(f,sep = ";"):
+def read(f,sep = ";"):
     """Читает матрицу из файла с заданным разделителем """
-    strm = [] #матрица в строковом представлении
-    matrix = [] #матрица в целых числах
+    str_m = [] #матрица в строковом представлении
+    m = [] #матрица в целых числах
     
     with open(f) as file_handler:
         for line in file_handler:#читаем строки из файла и добавляем в список
-            strm.append(line)
+            str_m.append(line)
             
-    for i in range(len(strm)):#добавляем в список спличенные по разделителю строки
-        matrix.append(strm[i].split(sep))
+    for i in range(len(str_m)):#добавляем в список спличенные по разделителю строки
+        m.append(str_m[i].split(sep))
         
-    for i in range(len(matrix)):#преобразуем значения в int
-        for j in range(len(matrix[i])):
-            matrix[i][j] = int(matrix[i][j])
-    return matrix
+    for i in range(len(m)):#преобразуем значения в int
+        for j in range(len(m[i])):
+            m[i][j] = int(m[i][j])
+    return m
 
-def generate_empty_square(size):
+def generate_square(size):
     """Генерирует пустую квадратную матрицу """
     return [[0 for i in range(size)] for j in range(size)]
 
-def randomize_row(m,row,lower_bound=-10,upper_bound = 10):
-    """ Рандомизирует row строку матрицы"""
+def randomize_row(m,i,lower_bound=-10,upper_bound = 10):
+    """ Рандомизирует i-ю строку матрицы"""
     for n in range(len(m[0])): 
-        m[row][n]=random.randint(lower_bound,upper_bound)
+        m[i][n]=random.randint(lower_bound,upper_bound)
     
-def randomize_column(m,column,lower_bound=-10,upper_bound = 10):
-    """ Рандомизирует column столбец матрицы"""
+def randomize_column(m,j,lower_bound=-10,upper_bound = 10):
+    """ Рандомизирует j-ый столбец матрицы"""
     for n in range(len(m)):
-        m[n][column]=random.randint(lower_bound,upper_bound)
+        m[n][j]=random.randint(lower_bound,upper_bound)
 
-def write_matrix(matrix,f = "m.txt",sep = ";"):
+def write(m,f = "m.txt",sep = ";"):
     """Записывает матрицу в файл с заданным разделителем"""
-    strm = str(matrix)
-    mod = str()
+    str_m = str(m) #матрица в строковом представлении
+    mod = str() #режим работы с файлом
     try:
         file = open(f)
         file.close()
@@ -80,12 +80,12 @@ def write_matrix(matrix,f = "m.txt",sep = ";"):
         mod = "w" #открывает файл на запись
     finally:
         with open(f,mod) as file_handler:
-            for i in range(len(strm)):
-                file_handler.write(sep.join(strm[i])) #записывает числа, соединённые разделителем
+            for i in range(len(str_m)):
+                file_handler.write(sep.join(str_m[i])) #записывает числа, соединённые разделителем
 
-def element_write_matrix(num,index,size,f = "m.txt",sep = ";"):
-    """Записывает матрицу в файл поэлементно """
-    mod = str()
+def element_write(num,index,size,f = "m.txt",sep = ";"):
+    """Записывает матрицу в файл поэлементно с заданным разделителем"""
+    mod = str() #режим работы с файлом
     i, j = index #текущие индексы
     n, m = size #размер матрицы
     exists= True if index != (0,0) else False #проверка на то, существуют ли элементы до этого
@@ -108,9 +108,9 @@ def element_write_matrix(num,index,size,f = "m.txt",sep = ";"):
 
 def reshape(matrix,size):
     """Преобразует одномерный массив в двумерный заданной размерности """
-    n, m = size
+    n, m = size 
     reshaped = [[0 for i in range(n)] for j in range(m)] #пустая матрица заданной размерности
-    if len(matrix) == n*m: 
+    if len(matrix) == n*m: #если количество чисел соответствует размерности
         for i in range(n):
            for j in range(m):
                reshaped[i][j] = matrix[m*i+j]
@@ -127,19 +127,20 @@ def output(m):
     return string
 
 if __name__ == "__main__":
-    m1 = read_matrix("m1.txt") #i*j
-    m2 = read_matrix("m2.txt") #j*m 
-    print(m1,m2)
+    #чтение матриц из файлов
+    file1=input("Введите адрес первого файла: ")
+    file2=input("Введите адрес второго файла: ")
+    file3=input("Введите адрес результирующего файла: ")
+    m1 = read(file1) #i*j
+    m2 = read(file2) #j*m 
     # результирующая матрица i*m
+    m3 = reshape(mp_multiply(m1,m2,mp_write = True,file=file3),(len(m1),len(m2[0])))
+    print("Матрица 1:\n{}\n Матрица 2:\n{}\n Матрица 3:\n {}\n".format(output(m1),output(m2),output(m3)))
     
-    m3 = reshape(mp_multiply(m1,m2,mp_write = True,file="m3.txt"),(len(m1),len(m2[0])))
-
-    print(m3)
-    #print("Матрица 1:\n{}\n Матрица 2:\n{}\n Матрица 3:\n {}\n".format(output(m1),output(m2),output(m3)))
-    
+    #генерация матриц с ГСЧ
     n = int(input("Введите размерность квадратной матрицы случайных чисел: "))
-    m4 = generate_empty_square(n) #пустые квадратные матрицы для 
-    m5 = generate_empty_square(n)
+    m4 = generate_square(n) #пустые квадратные матрицы для рандомизации
+    m5 = generate_square(n)
     m6 = reshape(mp_multiply(m4,m5,generate = True),(len(m4),len(m4)))
     print("Матрица 4:\n {}\n Матрица 5:\n {} \nМатрица 6:\n {} ".format(output(m4),
           output(m5),output(m6)))
