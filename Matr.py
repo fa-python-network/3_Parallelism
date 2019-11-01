@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     A = read_matr('matr1.txt')
     B = read_matr('matr2.txt')
-    res_matr = [[0, 0] for i in range(len(A))]
+    res_matr = [[0 for j in range(len(B))] for i in range(len(A))]
 
     ls = []
 
