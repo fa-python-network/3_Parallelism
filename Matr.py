@@ -34,11 +34,11 @@ if __name__ == '__main__':
 
     ls = []
 
-    for i in range(cpu_count()):
+    for i in range(len(A)):
         for j in range(len(B[1])):
             ls.append(([int(o) for o in A[i]], [int(k[j]) for k in B]))
 
-    p = Pool(len(ls))
+    p = Pool(cpu_count())
     new_ls = p.map(elem, ls)
     k = 0
     write_matr(new_ls, len(res_matr), len(res_matr[0]))
