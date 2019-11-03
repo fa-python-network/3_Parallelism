@@ -1,6 +1,17 @@
 # -*- coding: utf-8 -*-
+import random
 from multiprocessing import Process, Pool
 
+def gen(i):
+    '''
+    Функция генерирования матриц.
+    '''
+    n = random.randint(2, 5)
+    ls1 = [[random.randint(1,10) for i in range(n)] for j in range(n)]
+    ls2 = [[random.randint(1,10) for i in range(n)] for j in range(n)]            
+    return ls1, ls2
+            
+    
 def element(*args):
     '''
     Функция перемножения элементов.
@@ -18,64 +29,37 @@ def element(*args):
     
     return res
 
-def ch_mtrx(A, B):
-    '''
-    Функция проверки матриц.
-    '''
-    try:
-        for i in range(len(A)):
-            assert len(A[i])==len(B)                
-
-        for i in range(1, len(A[0])):
-            assert len(B[i])==len(B[i-1])
-            
-    except AssertionError:
-        print("Wrong matrix")
-        exit(0)
-        
-def extract(f):
-    '''
-    Функция вытаскивания матрицы из файла в список.
-    '''
-    mtrx = []
-    for line in f:
-        mtrx.append(list(line.split()))
-    return mtrx
-
-def involve(f, C, ln, st):
+def involve(f, C, ln):
     '''
     Функция втаскивания матрицы в файл.
     '''
     s = ""
     for i in range(ln):
         s = ""
-        for j in range(st):
+        for j in range(ln):
             s += str(C[i+j]) + " "
         f.write(s + "\n")
+    f.write("\n\n")
  
 def main():
-    # Вытаскиваем первую матрицу.
-    f = open("m1.txt")
-    mtrx1 = extract(f)
-    # Вытаскиваем вторую матрицу.
-    f = open("m2.txt")
-    mtrx2 = extract(f)
-    # Сравниваем.
-    ch_mtrx(mtrx1, mtrx2)
-    
-    ln = len(mtrx2[0])
-    st = len(mtrx1)
-    
-    mtrx3 = []
-    # ПУУУУЛЛЛ!!!
-    with Pool(ln*st) as p:
-        mtrx3 = (p.starmap(element, [((i,j), mtrx1, mtrx2) for i in range(ln) for j in range(st) ] ))
-    # Втаскиваем.
-    f = open("m3.txt", "w")    
-    involve(f, mtrx3, ln, st)
-    f.close()         
+    # Генерируем матрицы.
+    n = 5
+    with Pool(n) as p:
+        mls = (p.map(gen, range(n)))
+        
+        # Производим вычисления.
+        for i in mls:
+            ln = len(i[0])
+            with Pool(ln) as p1:
+                mtrx3 = (p1.starmap(element, [((j,k), i[0], i[1]) for j in range(ln) for k in range(ln) ] ))
+        # Втаскиваем.
+            f = open("m3.txt", "a")    
+            involve(f, mtrx3, ln)
+            f.close()         
 
 
 if __name__ == '__main__':
-        __spec__ = "ModuleSpec(name='builtins', loader=<class '_frozen_importlib.BuiltinImporter'>)"
+        __spec__ = "ModuleSpec(name='builtins', loader=<class '_frozen_importlib.BuiltinImporter'>)" # Без этой строчки 
+                                                                                                     # на домашнеи компе ничего 
+                                                                                                     # не работает.
         main()
