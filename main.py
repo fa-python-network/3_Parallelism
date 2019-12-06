@@ -1,8 +1,7 @@
 from multiprocessing import Pool
 import json
 
-def element(index, A, B):
-    i, j = index
+def element(i, j, A, B):
     res = 0
     # get a middle dimension
     N = len(A[0]) or len(B)
@@ -23,17 +22,21 @@ matrix = []
 
 
 if __name__ == '__main__':
-    for i in range(len(matrix1)):
-        a = []
-        for j in range(len(matrix2[0])):
-            b = Pool().starmap(element, [[(i, j), matrix1, matrix2]])[0]
-            a.append(b)
-        matrix.append(a)
-    Pool().close()
+    with Pool(2) as pool:
+        data = [[i, j, matrix1, matrix2] for i in range(len(matrix1)) \
+                                           for j in range(len(matrix2[0]))]
+        data = pool.starmap(element, data)
+        
+        data = [i for i in [data[x:x + len(matrix1[0])] for x in range (0, len(data), len(matrix1[0]))]]
+   
+        with open('matrix.json', 'w') as f:
+            json.dump(data, f) 
+        
+        print("Матрица")
+        for i in range(len(data)):
+            print(data[i])
+
+
+
     
-print("Матрица")
-for i in range(len(matrix)):
-    print(matrix[i])
     
-    with open('matrix.json', 'w') as f:
-        json.dump(matrix, f)
