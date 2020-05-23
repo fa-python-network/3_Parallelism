@@ -1,16 +1,17 @@
+from multiprocessing import  Pool
 
+def matrix_multiplier(a, b):
 
-def element(index, A, B):
-    i, j = index
-    res = 0
-    # get a middle dimension
-    N = len(A[0]) or len(B)
-    for k in range(N):
-        res += A[i][k] * B[k][j]
-    return res
+     s = sum(i*j for i, j in zip(a,b))
+     return s
 
+if __name__ =='__main__':
+    matrix_a=[[1,1], [2,2]]
+    matrix_b=[[12, 21], [1, 11], [5, 2]]
 
-matrix1 = [[1, 2], [3, 4]]
-matrix2 = [[2, 0], [1, 2]]
+    with Pool(2) as pool:
+        mat = pool.starmap(matrix_multiplier, [(i,j) for i in matrix_a for j in zip(*matrix_b)])
+    print(mat)
 
-print(element((1, 0), matrix1, matrix2))
+    result = [mat[i:i+len(matrix_b[0])] for i in range(0, len(mat), len(matrix_b[0]))]
+    print("Произведение исходных матриц = ", result)
