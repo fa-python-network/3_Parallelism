@@ -1,17 +1,24 @@
-from multiprocessing import Process, Pool
+# coding=utf-8
+from multiprocessing import Pool
 
 
-def element(index, A, B, res):
-    global d
-    i, j = index
-    b=[]
-    # get a middle dimension
-    N = len(A[0]) or len(B)
-    print (N)
-    for k in range(N):
-        res += A[i][k] * B[k][j]
-        print (res)
-    return ''
+def write(mat):
+    global g
+    b = 0
+    qq = len(mat)
+    fi = open('result.txt', 'a')
+    for q in range(qq):
+        b += 1
+        if b != g:
+            fi.write(str(mat[q]) + " ")
+        else:
+            fi.write(str(mat[q]) + "\n")
+            b = 0
+
+
+def multiplication(x, y):
+    rez = sum(i * k for i, k in zip(x, y))
+    return rez
 
 
 if __name__ == '__main__':
@@ -38,11 +45,10 @@ if __name__ == '__main__':
     for line in m2.readlines():
         cut = line.find('\n')
         if cut != -1:
-            c=line[:cut]
+            c = line[:cut]
             l = c.split(' ')
             result = [int(item) for item in l]
             matrix2.append(result)
-
         else:
             li = line.split(' ')
             result = [int(item) for item in li]
@@ -51,13 +57,13 @@ if __name__ == '__main__':
     m2 = open('matrix2.txt', 'r')
     mn = len(m2.readline().split(' '))
     m2.close()
-    print (matrix1, len(matrix1), mm)
+    g = len(matrix1)
+    print ('\nA = ', matrix1, len(matrix1), mm, 'Последние два числа это индексы i, j первой матрицы \n')
+    print ('B = ', matrix2, len(matrix2), mn, 'Последние два числа это индексы i, j второй матрицы \n')
+    f = open('result.txt', 'w')
+    f.write('')
+    with Pool(4) as pool:
+        matric = pool.starmap(multiplication, [(i, k) for i in matrix1 for k in zip(*matrix2)])
 
-    print (matrix2, len(matrix2), mn)
-
-    d = 0
-
-    p1 = Process(target=element, args=[(0, 0), matrix1, matrix2, res])
-    p1.start()
-    p1.join()
-
+        print('A * B = ', matric, ' В файл result.txt записан красивый ответ \n')
+        write(matric)
