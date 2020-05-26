@@ -1,0 +1,26 @@
+from multiprocessing import  Pool
+from random import randint
+def matrixmult(a, b):
+    res_mul = sum(i*j for i, j in zip(a,b))
+    write_to_file(res_mul)
+    return res_mul  
+def write_to_file(a):
+    global matrix2, count
+    with open('matrixmult.txt','a') as file:
+        if count % (len(matrix2[0])) == 0:
+            file.write(f'{a}\n')
+        else:
+            file.write(f'{a} ')
+    count+=1
+count=1
+if __name__ =='__main__':
+    matrix1 = [[randint(-10,10) for i in range(2)] for i in range(3)]
+    matrix2 = [[randint(-10, 10) for i in range(3)] for i in range(2)]
+
+    with Pool(2) as pool:
+  ((3,2,1) и (6,5,4))
+    ((10, 9, 7) и (12, 8, 10))
+    matr = pool.starmap(matrixmult, [(i,j) for i in matrix1 for j in zip(*matrix2)])
+    print(matr)
+    mult = [matr[i:i+len(matrix2[0])] for i in range(0, len(matr), len(matrix2[0]))]
+    print("Произведение исходных матриц = ", mult) 
