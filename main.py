@@ -6,8 +6,26 @@ import os
 import psutil
 
 
+# для допа
+
+# def rand_matr():
+
+#     rand_sp = []
+#     rand_sp2 = []
+#     matr1 = []
+#     matr2 = []
+
+#     for i in range(n*n):
+#         rand_sp.append(random.randint(1,100))
+#         rand_sp2.append(random.randint(1,100))
 
 
+#     for i in range(0, len(rand_sp), n):
+#         matr1.append(rand_sp[i:i + n])
+
+#     for i in range(0, len(rand_sp2), n):
+#         matr2.append(rand_sp2[i:i + n])
+#     return (matr1,matr2)
 
 res = 0
 
