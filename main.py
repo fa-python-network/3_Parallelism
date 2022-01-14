@@ -1,16 +1,83 @@
+import multiprocessing
+from multiprocessing import Process
+from ref import *
+import logging
+import os
+import psutil
 
 
-def element(index, A, B):
+# для допа
+
+# def rand_matr():
+
+#     rand_sp = []
+#     rand_sp2 = []
+#     matr1 = []
+#     matr2 = []
+
+#     for i in range(n*n):
+#         rand_sp.append(random.randint(1,100))
+#         rand_sp2.append(random.randint(1,100))
+
+
+#     for i in range(0, len(rand_sp), n):
+#         matr1.append(rand_sp[i:i + n])
+
+#     for i in range(0, len(rand_sp2), n):
+#         matr2.append(rand_sp2[i:i + n])
+#     return (matr1,matr2)
+
+res = 0
+
+def element(index, A, B, conn):
+    global res
+
     i, j = index
     res = 0
-    # get a middle dimension
     N = len(A[0]) or len(B)
     for k in range(N):
         res += A[i][k] * B[k][j]
-    return res
+    conn.send(res)
 
 
-matrix1 = [[1, 2], [3, 4]]
-matrix2 = [[2, 0], [1, 2]]
 
-print(element((1, 0), matrix1, matrix2))
+if __name__ == '__main__':
+    global v
+    global p1
+    if v == 3:
+        inds = [(0, 0), (0, 1),(1, 0),(1, 1)]
+    elif v == 4:
+       inds = [(0, 0), (0, 1), (0, 2), (1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+    procs = []
+    res = 0
+    fin = []
+
+    l_end, r_end = multiprocessing.Pipe()
+
+    for index, number in enumerate(inds):
+        p1 = Process(target=element, args=(number, mat1, mat2, r_end))
+        procs.append(p1)
+        p1.start()
+        res = l_end.recv()
+        fin.append(res)
+        logging.basicConfig(filename='/Users/Aram/Desktop/matrx.log', level=logging.INFO,
+                            format='%(asctime)s - %(message)s')
+
+        logging.info(f'{res}')
+
+
+    for p1 in procs:
+        p1.join()
+
+
+    sp = []
+
+    for i in range(0, len(fin), n):
+            sp.append(fin[i:i + n])
+
+    print(sp)
+    f1 = open('neww.txt', 'w')
+    f1.write(str(sp))
+
+
+
